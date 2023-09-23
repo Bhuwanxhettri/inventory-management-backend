@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      CustomerAge: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       ContactName: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -49,11 +54,15 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: {
+          name: 'unique_email',
+          msg: 'Email should be unique', // Custom error message
+        },
       },
     },
     {
       sequelize,
-      modelName: 'Customer',
+      modelName: 'customer',
     }
   );
   return Customer;

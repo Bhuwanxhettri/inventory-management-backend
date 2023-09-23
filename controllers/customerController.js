@@ -1,59 +1,47 @@
-const { Customer } = require('../models');
+// controllers/customerController.js
+const { customer } = require('../models');
+const asyncHandler = require('../utils/asyncHandler');
 
 // Create a new customer
-exports.create = async (req, res) => {
-  try {
-    const customer = await Customer.create(req.body);
-    return res.status(201).json(customer);
-  } catch (error) {
-    return res.status(500).json({ error: 'Error creating customer' });
-  }
+const create = async (req, res) => {
+  const customerCreated = await customer.create(req.body);
+  return res.status(201).json(customerCreated);
 };
 
 // Get all customers
-exports.getAll = async (req, res) => {
-  try {
-    const customers = await Customer.findAll();
-    return res.status(200).json(customers);
-  } catch (error) {
-    return res.status(500).json({ error: 'Error fetching customers' });
-  }
+const getAll = async (req, res) => {
+  const customers = await customer.findAll();
+  return res.status(200).json(customers);
 };
 
 // Get a customer by ID
-exports.getById = async (req, res) => {
-  try {
-    const customer = await Customer.findByPk(req.params.id);
-    if (!customer) return res.status(404).json({ error: 'Customer not found' });
-    return res.status(200).json(customer);
-  } catch (error) {
-    return res.status(500).json({ error: 'Error fetching customer' });
-  }
+const getById = async (req, res) => {
+  const customerGetById = await customer.findByPk(req.params.id);
+  if (!customerGetById) return res.status(404).json({ error: 'Customer not found' });
+  return res.status(200).json(customerGetById);
 };
 
 // Update a customer by ID
-exports.update = async (req, res) => {
-  try {
-    const [updated] = await Customer.update(req.body, {
-      where: { id: req.params.id },
-    });
-    if (!updated) return res.status(404).json({ error: 'Customer not found' });
-    const updatedCustomer = await Customer.findByPk(req.params.id);
-    return res.status(200).json(updatedCustomer);
-  } catch (error) {
-    return res.status(500).json({ error: 'Error updating customer' });
-  }
+const update = async (req, res) => {
+  const [updated] = await customer.update(req.body, {
+    where: { id: req.params.id },
+  });
+  if (!updated) return res.status(404).json({ error: 'Customer not found' });
+  const updatedCustomer = await customer.findByPk(req.params.id);
+  return res.status(200).json(updatedCustomer);
 };
 
 // Delete a customer by ID
-exports.delete = async (req, res) => {
-  try {
-    const deleted = await Customer.destroy({
-      where: { id: req.params.id },
-    });
-    if (!deleted) return res.status(404).json({ error: 'Customer not found' });
-    return res.status(204).send();
-  } catch (error) {
-    return res.status(500).json({ error: 'Error deleting customer' });
-  }
+const deleteCustomer = async (req, res) => {
+  const deleted = await customer.destroy({
+    where: { id: req.params.id },
+  });
+  if (!deleted) return res.status(404).json({ error: 'Customer not found' });
+  return res.status(204).send();
 };
+
+exports.create = asyncHandler(create);
+exports.getAll = asyncHandler(getAll);
+exports.getById = asyncHandler(getById);
+exports.update = asyncHandler(update);
+exports.delete = asyncHandler(deleteCustomer);
